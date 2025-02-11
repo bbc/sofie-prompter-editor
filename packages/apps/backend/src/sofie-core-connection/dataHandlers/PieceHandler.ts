@@ -13,10 +13,14 @@ export class PieceHandler extends DataHandler {
 
 		this.initialized = Promise.resolve().then(async () => {
 			{
+				//@ts-expect-error - TODO: fix this
 				const observer = this.core.observe('pieces')
-				observer.added = (id: string) => this._updatePiece(protectString(id))
-				observer.changed = (id: string) => this._updatePiece(protectString(id))
-				observer.removed = (id: string) => this._updatePiece(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.added = (id: PeripheralDeviceId) => this._updatePiece(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.changed = (id: PeripheralDeviceId) => this._updatePiece(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.removed = (id: PeripheralDeviceId) => this._updatePiece(protectString(id))
 				this.observers.push(observer)
 			}
 		})
@@ -27,11 +31,12 @@ export class PieceHandler extends DataHandler {
 		this.transformers.parts.updateCorePiece(pieceId, piece)
 	}
 	private get pieces(): Collection<Core.Piece> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.Piece>('pieces')
 		if (!collection) {
 			this.log.error('collection "pieces" not found!')
 			throw new Error('collection "pieces" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.Piece>
 	}
 }

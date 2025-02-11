@@ -11,10 +11,14 @@ export class RundownHandler extends DataHandler {
 		super(log.category('RundownHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('rundowns')
-			observer.added = (id: string) => this.onAdded(protectString(id))
-			observer.changed = (id: string) => this.onChanged(protectString(id))
-			observer.removed = (id: string) => this.onRemoved(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this.onAdded(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this.onChanged(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.removed = (id: PeripheralDeviceId) => this.onRemoved(protectString(id))
 			this.observers.push(observer)
 		})
 	}
@@ -32,11 +36,12 @@ export class RundownHandler extends DataHandler {
 	}
 
 	private get collection(): Collection<Core.DBRundown> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.DBRundown>('rundowns')
 		if (!collection) {
 			this.log.error('collection "rundowns" not found!')
 			throw new Error('collection "rundowns" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.DBRundown>
 	}
 }

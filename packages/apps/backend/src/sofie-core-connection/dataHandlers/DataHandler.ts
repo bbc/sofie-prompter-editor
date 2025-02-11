@@ -5,7 +5,7 @@ import { Transformers } from '../dataTransformers/Transformers.js'
 
 export abstract class DataHandler {
 	public abstract initialized: Promise<void>
-	protected observers: Array<Observer> = []
+	protected observers: Array<Observer<any>> = []
 	constructor(
 		protected log: LoggerInstance,
 		protected core: CoreConnection,

@@ -12,10 +12,14 @@ export class PackageInfoHandler extends DataHandler {
 		super(log.category('PackageInfoHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('packageInfos')
-			observer.added = (id: string) => this._updatePackageInfo(protectString(id))
-			observer.changed = (id: string) => this._updatePackageInfo(protectString(id))
-			observer.removed = (id: string) => this._updatePackageInfo(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this._updatePackageInfo(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this._updatePackageInfo(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.removed = (id: PeripheralDeviceId) => this._updatePackageInfo(protectString(id))
 			this.observers.push(observer)
 		})
 	}
@@ -25,11 +29,12 @@ export class PackageInfoHandler extends DataHandler {
 		this.transformers.expectedPackages.updateCoreScriptPackageInfo(packageInfoId, packageInfo)
 	}
 	private get packageInfos(): Collection<Core.PackageInfoDB> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.PackageInfoDB>('packageInfos')
 		if (!collection) {
 			this.log.error('collection "packageInfos" not found!')
 			throw new Error('collection "packageInfos" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.PackageInfoDB>
 	}
 }

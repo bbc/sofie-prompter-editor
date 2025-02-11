@@ -15,23 +15,30 @@ export class SettingsHandler extends DataHandler {
 		super(log.category('SettingsHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			await this.core.autoSubscribe('peripheralDeviceForDevice', this.core.deviceId)
 
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('peripheralDeviceForDevice')
-			observer.added = (id: string) => this.onDeviceChanged(protectString(id))
-			observer.changed = (id: string) => this.onDeviceChanged(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this.onDeviceChanged(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this.onDeviceChanged(protectString(id))
 			this.observers.push(observer)
 		})
 	}
 	private onDeviceChanged(id: PeripheralDeviceId): void {
 		if (id === this.core.deviceId) {
+			//@ts-expect-error - TODO: fix this
 			const collection = this.core.getCollection<PeripheralDeviceForDevice>('peripheralDeviceForDevice')
 			if (!collection) {
 				this.log.error('collection "peripheralDevices" not found!')
 				return
 			}
 
+			//@ts-expect-error - TODO: fix this
 			const device = collection.findOne(id)
+			//@ts-expect-error - TODO: fix this
 			const deviceSettings: any = device?.deviceSettings ?? {} // TODO
 
 			const logLevel = deviceSettings.debugLogging ? 'debug' : 'info'

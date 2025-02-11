@@ -12,10 +12,14 @@ export class ExpectedPackageHandler extends DataHandler {
 		super(log.category('ExpectedPackageHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('expectedPackages')
-			observer.added = (id: string) => this._updateExpectedPackage(protectString(id))
-			observer.changed = (id: string) => this._updateExpectedPackage(protectString(id))
-			observer.removed = (id: string) => this._updateExpectedPackage(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this._updateExpectedPackage(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this._updateExpectedPackage(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.removed = (id: PeripheralDeviceId) => this._updateExpectedPackage(protectString(id))
 			this.observers.push(observer)
 		})
 	}
@@ -25,11 +29,12 @@ export class ExpectedPackageHandler extends DataHandler {
 		this.transformers.expectedPackages.updateCoreExpectedPackage(packageId, expectedPackage)
 	}
 	private get expectedPackages(): Collection<Core.ExpectedPackageDB> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.ExpectedPackageDB>('expectedPackages')
 		if (!collection) {
 			this.log.error('collection "expectedPackages" not found!')
 			throw new Error('collection "expectedPackages" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.ExpectedPackageDB>
 	}
 }

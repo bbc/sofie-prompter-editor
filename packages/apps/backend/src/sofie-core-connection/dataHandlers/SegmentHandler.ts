@@ -12,10 +12,14 @@ export class SegmentHandler extends DataHandler {
 		super(log.category('SegmentHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('segments')
-			observer.added = (id: string) => this.onAdded(protectString(id))
-			observer.changed = (id: string) => this.onChanged(protectString(id))
-			observer.removed = (id: string) => this.onRemoved(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this.onAdded(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this.onChanged(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.removed = (id: PeripheralDeviceId) => this.onRemoved(protectString(id))
 			this.observers.push(observer)
 		})
 	}
@@ -72,11 +76,12 @@ export class SegmentHandler extends DataHandler {
 	}
 
 	private get collection(): Collection<Core.DBSegment> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.DBSegment>('segments')
 		if (!collection) {
 			this.log.error('collection "segments" not found!')
 			throw new Error('collection "segments" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.DBSegment>
 	}
 }

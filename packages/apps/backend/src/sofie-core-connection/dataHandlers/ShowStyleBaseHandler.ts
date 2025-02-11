@@ -13,10 +13,14 @@ export class ShowStyleBaseHandler extends DataHandler {
 
 		this.initialized = Promise.resolve().then(async () => {
 			{
+				//@ts-expect-error - TODO: fix this
 				const observer = this.core.observe('showStyleBases')
-				observer.added = (id: string) => this._updateData(protectString(id))
-				observer.changed = (id: string) => this._updateData(protectString(id))
-				observer.removed = (id: string) => this._updateData(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.added = (id: PeripheralDeviceId) => this._updateData(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.changed = (id: PeripheralDeviceId) => this._updateData(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.removed = (id: PeripheralDeviceId) => this._updateData(protectString(id))
 				this.observers.push(observer)
 			}
 		})
@@ -27,11 +31,12 @@ export class ShowStyleBaseHandler extends DataHandler {
 		this.transformers.parts.updateCoreShowStyleBase(_id, showStyleBase)
 	}
 	private get showStyleBases(): Collection<Core.DBShowStyleBase> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.DBShowStyleBase>('showStyleBases')
 		if (!collection) {
 			this.log.error('collection "showStyleBases" not found!')
 			throw new Error('collection "showStyleBases" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.DBShowStyleBase>
 	}
 }

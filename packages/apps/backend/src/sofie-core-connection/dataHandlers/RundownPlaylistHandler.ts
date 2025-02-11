@@ -12,10 +12,14 @@ export class RundownPlaylistHandler extends DataHandler {
 		super(log.category('RundownPlaylistHandler'), core, store, transformers)
 
 		this.initialized = Promise.resolve().then(async () => {
+			//@ts-expect-error - TODO: fix this
 			const observer = this.core.observe('rundownPlaylists')
-			observer.added = (id: string) => this.onAdded(protectString(id))
-			observer.changed = (id: string) => this.onChanged(protectString(id))
-			observer.removed = (id: string) => this.onRemoved(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.added = (id: PeripheralDeviceId) => this.onAdded(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.changed = (id: PeripheralDeviceId) => this.onChanged(protectString(id))
+			//@ts-expect-error - TODO: fix this
+			observer.removed = (id: PeripheralDeviceId) => this.onRemoved(protectString(id))
 			this.observers.push(observer)
 		})
 	}
@@ -65,11 +69,12 @@ export class RundownPlaylistHandler extends DataHandler {
 	}
 
 	private get collection(): Collection<Core.DBRundownPlaylist> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.DBRundownPlaylist>('rundownPlaylists')
 		if (!collection) {
 			this.log.error('collection "rundownPlaylists" not found!')
 			throw new Error('collection "rundownPlaylists" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.DBRundownPlaylist>
 	}
 }

@@ -6,6 +6,7 @@ import {
 	JSONBlobStringify,
 	StatusCode,
 	ProtectedString,
+	SubscriptionId,
 } from '@sofie-automation/server-core-integration'
 import { AnyProtectedString, PartId, RundownPlaylistId, ScriptContents } from '@sofie-prompter-editor/shared-model'
 import {
@@ -224,7 +225,7 @@ export class SofieCoreConnection extends EventEmitter<SofieCoreConnectionEvents>
 
 		subs.forEach((sub) => {
 			sub.then((subscriptionId) => {
-				if (subscriptionId) this.core.unsubscribe(subscriptionId)
+				if (subscriptionId) this.core.unsubscribe(subscriptionId as any as SubscriptionId)
 			})
 		})
 		this.subscriptions.delete(hash)
@@ -252,20 +253,24 @@ export class SofieCoreConnection extends EventEmitter<SofieCoreConnectionEvents>
 		release51PublicationName: string | undefined,
 		release51Params: any[]
 	): Promise<string> {
+		release50Params = release50Params || []
 		// This is a temporary hack to support both release <=50 and 51.
 		// (This hack can be removed when core-integration has been updated to >=v51)
-
+		//@ts-expect-error - this is typed in release52 and rundownPlaylists are not exposed:
+		return await this.core.autoSubscribe(release51PublicationName ?? release50PublicationName, ...release51Params)
+/*
 		try {
 			// First, try release <=50:
+
 			return await this.core.autoSubscribe(release50PublicationName, ...release50Params)
 		} catch (e) {
 			if (`${e}`.match(/(Match failed)|(Subscription .* not found)/)) {
 				// Try release51:
-				return await this.core.autoSubscribe(release51PublicationName ?? release50PublicationName, ...release51Params)
 			} else {
 				throw e
 			}
 		}
+			*/
 	}
 	private async setupCoreSubscriptions(): Promise<void> {
 		// We always subscribe to these:

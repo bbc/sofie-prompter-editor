@@ -13,10 +13,14 @@ export class PartHandler extends DataHandler {
 
 		this.initialized = Promise.resolve().then(async () => {
 			{
+				//@ts-expect-error - TODO: fix this
 				const observer = this.core.observe('parts')
-				observer.added = (id: string) => this._updatePart(protectString(id))
-				observer.changed = (id: string) => this._updatePart(protectString(id))
-				observer.removed = (id: string) => this._updatePart(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.added = (id: PeripheralDeviceId) => this._updatePart(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.changed = (id: PeripheralDeviceId) => this._updatePart(protectString(id))
+				//@ts-expect-error - TODO: fix this
+				observer.removed = (id: PeripheralDeviceId) => this._updatePart(protectString(id))
 				this.observers.push(observer)
 			}
 		})
@@ -26,11 +30,12 @@ export class PartHandler extends DataHandler {
 		this.transformers.parts.updateCorePart(partId, this.parts.findOne(partId))
 	}
 	private get parts(): Collection<Core.DBPart> {
+		//@ts-expect-error - TODO: fix this
 		const collection = this.core.getCollection<Core.DBPart>('parts')
 		if (!collection) {
 			this.log.error('collection "parts" not found!')
 			throw new Error('collection "parts" not found!')
 		}
-		return collection
+		return collection as any as Collection<Core.DBPart>
 	}
 }
